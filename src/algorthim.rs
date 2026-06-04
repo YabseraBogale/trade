@@ -1,5 +1,7 @@
 use std::f64;
 
+use chrono::{DateTime, Utc};
+
 pub struct Tick{
     volume:f64,
     price:f64,
@@ -8,6 +10,12 @@ pub struct Tick{
 pub struct TimeWeightedAveragePrice{
     share:f64,
     price:f64,
+}
+
+pub struct Order{
+    tick:Tick,
+    side:String,
+    time_stamp:DateTime<Utc>
 }
 
 pub fn percentage_of_volume(order_volume: f64, market_volume: f64)->f64 {
