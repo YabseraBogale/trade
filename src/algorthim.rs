@@ -8,6 +8,7 @@ pub struct TransactionCost{
     exchange_fee:f64,
     taxes_fee:f64,
     clearing_and_settlement_fees:f64,
+    slippage:f64,
 }
 pub struct Tick{
     volume:f64,
