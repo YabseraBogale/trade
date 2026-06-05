@@ -2,6 +2,13 @@ use std::f64;
 
 use chrono::{DateTime, Utc};
 
+pub struct TransactionCost{
+    commissions:f64,
+    number_of_shares:i64,
+    exchange_fee:f64,
+    taxes_fee:f64,
+    clearing_and_settlement_fees:f64,
+}
 pub struct Tick{
     volume:f64,
     price:f64,
@@ -36,3 +43,12 @@ pub fn volume_weighted_averagePrice(t:&[Tick]) -> f64 {
    }    
    return sum/sum_volume;
 }
+
+pub fn bid_ask_spread(ask_price:f64,bid_price:f64)-> f64{
+    return ask_price-bid_price;
+}
+
+pub fn implementation_shortfall(explicit_cost:f64,execution_cost:f64,slippage:f64,spread:f64,opportunity_cost:f64)->f64{
+    return explicit_cost+(execution_cost*(slippage/spread))+opportunity_cost;
+}
+
