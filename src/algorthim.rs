@@ -15,7 +15,8 @@ pub struct TimeWeightedAveragePrice{
 pub struct Order{
     tick:Tick,
     side:String,
-    time_stamp:DateTime<Utc>
+    time_stamp:DateTime<Utc>,
+    order_type:String,
 }
 
 pub fn percentage_of_volume(order_volume: f64, market_volume: f64)->f64 {
