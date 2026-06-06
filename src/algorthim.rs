@@ -1,7 +1,6 @@
 use std::f64;
 
 use chrono::{DateTime, Utc};
-
 pub struct TransactionCost{
     commissions:f64,
     number_of_shares:i64,
