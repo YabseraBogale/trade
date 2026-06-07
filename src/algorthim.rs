@@ -14,6 +14,22 @@ pub struct Tick{
     pub price:f64,
 }
 
+pub struct VolumeWeightedAveragePriceTracker{
+    pub cumulative_volume:f64,
+    pub cumulative_pv:f64,
+}
+
+impl VolumeWeightedAveragePriceTracker {
+    pub fn new()-> Self{
+        return Self { cumulative_volume: 0.0, cumulative_pv: 0.0 };
+    }
+    pub fn update(&mut self,price:f64,volume:f64)-> f64{
+        self.cumulative_volume+=volume;
+        self.cumulative_pv+=price*volume;
+        return self.cumulative_pv/self.cumulative_volume;
+    } 
+}
+
 pub struct TimeWeightedAveragePrice{
     pub share:f64,
     pub price:f64,
@@ -35,6 +51,20 @@ pub struct Order{
     pub order_type:OrderType,
 }
 
+pub struct OrderBook{
+    pub bids:Vec<(f64,f64)>,
+    pub asks:Vec<(f64,f64)>,
+}
+
+impl OrderBook {
+    pub fn mid_price(&self)-> Option<f64>{
+        let best_bid=self.bids.first()?.0;
+        let best_ask=self.asks.first()?.0;
+        return Some((best_bid+best_ask)/2.0);
+
+    }
+}
+
 pub fn percentage_of_volume(order_volume: f64, market_volume: f64)->f64 {
     return order_volume / (order_volume + market_volume);
 }
@@ -43,7 +73,7 @@ pub fn public_market_volume(participation_rate: f64, market_volume: f64)->f64 {
     return participation_rate * market_volume / (1.0 - participation_rate);
 }
 
-pub fn volume_weighted_average_price(t:&[Tick]) -> Option<f64> {
+pub fn volume_weighted_average_price_historical(t:&[Tick]) -> Option<f64> {
    let mut sum_volume=0.0;
    let mut sum: f64 = 0.0;
    for tick in t{
