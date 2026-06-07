@@ -19,11 +19,20 @@ pub struct TimeWeightedAveragePrice{
     pub price:f64,
 }
 
+pub enum Side{
+    Buy,
+    Sell,
+}
+pub enum OrderType {
+    Market,
+    Limit{price:f64},
+    Stop{trigger_price:f64},
+}
 pub struct Order{
     pub tick:Tick,
-    pub side:String,
+    pub side:Side,
     pub time_stamp:DateTime<Utc>,
-    pub order_type:String,
+    pub order_type:OrderType,
 }
 
 pub fn percentage_of_volume(order_volume: f64, market_volume: f64)->f64 {
