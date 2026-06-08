@@ -61,11 +61,27 @@ impl OrderBook {
         let best_bid=self.bids.first()?.0;
         let best_ask=self.asks.first()?.0;
         return Some((best_bid+best_ask)/2.0);
-
     }
-    
+
     pub fn delay_cost(&self,shares_executed:f64,price_arrival:f64,price_decision:f64)->f64{
         return shares_executed*(price_arrival-price_decision);
+    }
+
+    pub fn tradin_cost(&self,shares_executed:f64,price_arrival:f64)->Option<f64>{
+        
+        match self.mid_price() {
+            None=>{
+                return None;
+            },
+            Some(ok)=>{
+                return Some(shares_executed*(ok-price_arrival));
+            }
+        }
+        
+    }
+
+    pub fn opportunity_cost(&self,share_desired:f64,share_executed:f64,price_close:f64,price_decision:f64)->f64{
+        return (share_desired-share_executed)*(price_close-price_decision);
     }
 
 }
