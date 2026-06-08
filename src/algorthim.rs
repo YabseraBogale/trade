@@ -77,12 +77,17 @@ impl OrderBook {
                 return Some(shares_executed*(ok-price_arrival));
             }
         }
-        
+
     }
 
     pub fn opportunity_cost(&self,share_desired:f64,share_executed:f64,price_close:f64,price_decision:f64)->f64{
         return (share_desired-share_executed)*(price_close-price_decision);
     }
+
+    pub fn explicit_fees(t:TransactionCost)->f64{
+        return t.clearing_and_settlement_fees+t.exchange_fee+t.taxes_fee+t.commissions;
+    }
+
 
 }
 
