@@ -63,6 +63,11 @@ impl OrderBook {
         return Some((best_bid+best_ask)/2.0);
 
     }
+    
+    pub fn delay_cost(&self,shares_executed:f64,price_arrival:f64,price_decision:f64)->f64{
+        return shares_executed*(price_arrival-price_decision);
+    }
+
 }
 
 pub fn percentage_of_volume(order_volume: f64, market_volume: f64)->f64 {
@@ -93,6 +98,7 @@ pub fn bid_ask_spread(ask_price:f64,bid_price:f64)-> f64{
 pub fn implementation_shortfall(explicit_cost:f64,execution_cost:f64,slippage:f64,spread:f64,opportunity_cost:f64)->f64{
     return explicit_cost+(execution_cost*(slippage/spread))+opportunity_cost;
 }
+
 #[cfg(test)]
 mod test{
     use super::*;
