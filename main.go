@@ -124,4 +124,3 @@ pub fn implementation_shortfall(explicit_cost:f64,execution_cost:f64,slippage:f6
 mod test{
     use super::*;
 }
-
