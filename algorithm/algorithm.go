@@ -11,6 +11,7 @@ type TransactionCost struct{
     ClearingAndSettlementFees float64,
     Slippage float64,
 }
+
 type Tick struct{
     Volume float64,
     Price float64,
