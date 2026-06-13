@@ -72,7 +72,7 @@ func (o *OrderBook)OpportunityCost(share_desired float64,share_executed float64,
     }
 // to be implented
 func (o *OrderBook)ExplicitFees(t TransactionCost)float64{
-    
+    return t.ExchangeFee+t.ClearingAndSettlementFees+t.Commissions+t.TaxesFee    
 }
 
 
