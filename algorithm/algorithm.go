@@ -4,26 +4,29 @@ import "time"
 
 
 type TransactionCost struct{
-   	Commissions float64,
-    NumberOfShares int,
-    ExchangeFee float64,
-    TaxesFee float64,
-    ClearingAndSettlementFees float64,
-    Slippage float64,
+   	Commissions float64
+    NumberOfShares int
+    ExchangeFee float64
+    TaxesFee float64
+    ClearingAndSettlementFees float64
+    Slippage float64
 }
 
 type Tick struct{
-    Volume float64,
-    Price float64,
+    Volume float64
+    Price float64
 }
 
 type VolumeWeightedAveragePriceTracker struct{
-    Cumulative_volume float64,
-    Cumulative_pv float64,
+    Cumulative_volume float64
+    Cumulative_pv float64
 }
 
-func (v *VolumeWeightedAveragePriceTracker)new(){
-        return VolumeWeightedAveragePriceTracker{ Cumulative_volume: 0.0, Cumulative_pv: 0.0 };
+func New() VolumeWeightedAveragePriceTracker{
+        return VolumeWeightedAveragePriceTracker{ 
+            Cumulative_volume: 0.0,
+            Cumulative_pv: 0.0 
+        }
 }
 
 func (v *VolumeWeightedAveragePriceTracker) Update(price float64,volume float64)float64{
@@ -34,21 +37,21 @@ func (v *VolumeWeightedAveragePriceTracker) Update(price float64,volume float64)
 
 
 type TimeWeightedAveragePrice struct{
-    Share float64,
-    Price float64,
+    Share float64
+    Price float64
 }
 
 type Order struct{
-    Tick Tick,
-    Side string,
-    TimeStamp time.Time,
-    Market string,
-    Limit floafloat64
+    Tick Tick
+    Side string
+    TimeStamp time.Time
+    Market string
+    Limit float64
 }
 
 type OrderBook struct{
-    Bids []float64 ,
-    Asks []float64,
+    Bids []float64 
+    Asks []float64
 }
 
 
@@ -71,7 +74,7 @@ func (o *OrderBook)TradingCost(shares_executed float64,price_arrival float64)flo
 func (o *OrderBook)OpportunityCost(share_desired float64,share_executed float64,price_close float64,price_decision float64)float64{
         return (share_desired-share_executed)*(price_close-price_decision)
     }
-// to be implented
+
 func (o *OrderBook)ExplicitFees(t TransactionCost)float64{
     return t.ExchangeFee+t.ClearingAndSettlementFees+t.Commissions+t.TaxesFee    
 }
@@ -88,9 +91,9 @@ func PublicMarketVolume(participation_rate float64, market_volume float64)float6
 func VolumeWeightedAveragePriceHistorical(t []Tick)float64{
    sum_volume:=0.0
    sum:= 0.0
-   for tick in t{
-        sum_volume+=tick.volume
-        sum+=tick.price*tick.volume
+   for _,tick:=range t{
+        sum_volume+=tick.Volume
+        sum+=tick.Price*tick.Volume
    }    
    return sum/sum_volume
 }
