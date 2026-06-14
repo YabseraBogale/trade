@@ -48,13 +48,13 @@ type Order struct {
 }
 
 type OrderBook struct {
-	Bids []float64
-	Asks []float64
+	Bids [][]float64
+	Asks [][]float64
 }
 
 func (o *OrderBook) MidPrice() float64 {
-	best_bid := o.Bids[0]
-	best_ask := o.Asks[0]
+	best_bid := o.Bids[0][0]
+	best_ask := o.Asks[0][0]
 	return (best_bid + best_ask) / 2.0
 }
 
