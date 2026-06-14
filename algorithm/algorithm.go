@@ -47,14 +47,19 @@ type Order struct {
 	Limit     float64
 }
 
+type PriceLevel struct {
+	Price  float64
+	Volume float64
+}
+
 type OrderBook struct {
-	Bids [][]float64
-	Asks [][]float64
+	Bids []PriceLevel
+	Asks []PriceLevel
 }
 
 func (o *OrderBook) MidPrice() float64 {
-	best_bid := o.Bids[0][0]
-	best_ask := o.Asks[0][0]
+	best_bid := o.Bids[0].Price
+	best_ask := o.Asks[0].Price
 	return (best_bid + best_ask) / 2.0
 }
 
@@ -91,13 +96,12 @@ func VolumeWeightedAveragePriceHistorical(t []Tick) float64 {
 		sum_volume += tick.Volume
 		sum += tick.Price * tick.Volume
 	}
+	if sum_volume == 0.0 {
+		return 0.0
+	}
 	return sum / sum_volume
 }
 
 func BidAskSpread(ask_price float64, bid_price float64) float64 {
 	return ask_price - bid_price
-}
-
-func ImplementationShortfAll(explicit_cost float64, execution_cost float64, slippage float64, spread float64, opportunity_cost float64) float64 {
-	return explicit_cost + (execution_cost * (slippage / spread)) + opportunity_cost
 }
