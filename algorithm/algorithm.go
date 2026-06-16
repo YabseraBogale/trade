@@ -1,7 +1,5 @@
 package algorithm
 
-import "time"
-
 type TransactionCost struct {
 	Commissions               float64
 	NumberOfShares            int
@@ -40,11 +38,13 @@ type TimeWeightedAveragePrice struct {
 }
 
 type Order struct {
-	Tick      Tick
-	Side      string
-	TimeStamp time.Time
-	Market    string
-	Limit     float64
+	Side           string
+	SharesDesired  float64
+	SharesExecuted float64
+	PriceDecision  float64
+	PriceArrival   float64
+	PriceExecuted  float64
+	PriceClose     float64
 }
 
 type PriceLevel struct {
