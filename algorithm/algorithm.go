@@ -1,5 +1,10 @@
 package algorithm
 
+import (
+	"errors"
+	"strings"
+)
+
 type TransactionCost struct {
 	Commissions               float64
 	NumberOfShares            int
@@ -77,8 +82,37 @@ func (o *OrderBook) OpportunityCost(share_desired float64, share_executed float6
 	return (share_desired - share_executed) * (price_close - price_decision)
 }
 
-func (o *OrderBook) ExplicitFees(t TransactionCost) float64 {
+func (t *TransactionCost) TotalExplicitFees() float64 {
 	return t.ExchangeFee + t.ClearingAndSettlementFees + t.Commissions + t.TaxesFee
+}
+
+func (o *Order) ImplementationShortfall(fees TransactionCost) (float64, error) {
+	side := strings.ToUpper(o.Side)
+	if side != "BUY" && side != "SELL" {
+		return 0.0, errors.New("invalid order side: must be BUY or SELL")
+	}
+
+	var executionCost float64
+	if side == "BUY" {
+		executionCost = o.SharesExecuted * (o.PriceExecuted - o.PriceDecision)
+	} else {
+		executionCost = o.SharesExecuted * (o.PriceDecision - o.PriceExecuted)
+	}
+
+	var opportunityCost float64
+	sharesUnexecuted := o.SharesDesired - o.SharesExecuted
+	if sharesUnexecuted > 0 {
+		if side == "BUY" {
+			opportunityCost = sharesUnexecuted * (o.PriceClose - o.PriceDecision)
+		} else {
+			opportunityCost = sharesUnexecuted * (o.PriceDecision - o.PriceClose)
+		}
+	}
+
+	explicitCost := fees.TotalExplicitFees()
+
+	totalIS := executionCost + opportunityCost + explicitCost
+	return totalIS, nil
 }
 
 func PercentageOfVolume(order_volume float64, market_volume float64) float64 {
