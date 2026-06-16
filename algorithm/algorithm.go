@@ -68,18 +68,18 @@ func (o *OrderBook) MidPrice() float64 {
 	return (best_bid + best_ask) / 2.0
 }
 
-func (o *OrderBook) DelayCost(shares_executed float64, price_arrival float64, price_decision float64) float64 {
-	return shares_executed * (price_arrival - price_decision)
+func (o *OrderBook) DelayCost(sharesExecuted float64, priceArrival float64, priceDecision float64) float64 {
+	return sharesExecuted * (priceArrival - priceDecision)
 }
 
-func (o *OrderBook) TradingCost(shares_executed float64, price_arrival float64) float64 {
+func (o *OrderBook) TradingCost(sharesExecuted float64, priceArrival float64) float64 {
 	ok := o.MidPrice()
-	return shares_executed * (ok - price_arrival)
+	return sharesExecuted * (ok - priceArrival)
 
 }
 
-func (o *OrderBook) OpportunityCost(share_desired float64, share_executed float64, price_close float64, price_decision float64) float64 {
-	return (share_desired - share_executed) * (price_close - price_decision)
+func (o *OrderBook) OpportunityCost(shareDesired float64, sharedExecuted float64, priceClose float64, priceDecision float64) float64 {
+	return (shareDesired - sharedExecuted) * (priceClose - priceDecision)
 }
 
 func (t *TransactionCost) TotalExplicitFees() float64 {
@@ -115,27 +115,27 @@ func (o *Order) ImplementationShortfall(fees TransactionCost) (float64, error) {
 	return totalIS, nil
 }
 
-func PercentageOfVolume(order_volume float64, market_volume float64) float64 {
-	return order_volume / (order_volume + market_volume)
+func PercentageOfVolume(orderVolume float64, marketVolume float64) float64 {
+	return orderVolume / (orderVolume + marketVolume)
 }
 
-func PublicMarketVolume(participation_rate float64, market_volume float64) float64 {
-	return participation_rate * market_volume / (1.0 - participation_rate)
+func PublicMarketVolume(participationRate float64, marketVolume float64) float64 {
+	return participationRate * marketVolume / (1.0 - participationRate)
 }
 
 func VolumeWeightedAveragePriceHistorical(t []Tick) float64 {
-	sum_volume := 0.0
+	sumVolume := 0.0
 	sum := 0.0
 	for _, tick := range t {
-		sum_volume += tick.Volume
+		sumVolume += tick.Volume
 		sum += tick.Price * tick.Volume
 	}
-	if sum_volume == 0.0 {
+	if sumVolume == 0.0 {
 		return 0.0
 	}
-	return sum / sum_volume
+	return sum / sumVolume
 }
 
-func BidAskSpread(ask_price float64, bid_price float64) float64 {
-	return ask_price - bid_price
+func BidAskSpread(askPrice float64, bidPrice float64) float64 {
+	return askPrice - bidPrice
 }
