@@ -12,5 +12,5 @@ func TestFetch(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error: %v", err)
 	}
-	fmt.Println("Successfully processed: length of data %d", len(res))
+	fmt.Println("Successfully processed: length of data ", len(res))
 }
