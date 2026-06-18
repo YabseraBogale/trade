@@ -63,9 +63,9 @@ type OrderBook struct {
 }
 
 func (o *OrderBook) MidPrice() float64 {
-	best_bid := o.Bids[0].Price
-	best_ask := o.Asks[0].Price
-	return (best_bid + best_ask) / 2.0
+	bestBid := o.Bids[0].Price
+	bestAsk := o.Asks[0].Price
+	return (bestBid + bestAsk) / 2.0
 }
 
 func (o *OrderBook) DelayCost(sharesExecuted float64, priceArrival float64, priceDecision float64) float64 {
