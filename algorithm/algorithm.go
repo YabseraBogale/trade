@@ -1,7 +1,9 @@
 package algorithm
 
 import (
+	"encoding/json"
 	"errors"
+	"net/http"
 	"strings"
 )
 
@@ -138,4 +140,20 @@ func VolumeWeightedAveragePriceHistorical(t []Tick) float64 {
 
 func BidAskSpread(askPrice float64, bidPrice float64) float64 {
 	return askPrice - bidPrice
+}
+
+func FetchAndParseFromURL(apiURL string) ([]PriceLevel, error) {
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	priceLevels := []PriceLevel{}
+	err = json.NewDecoder(resp.Body).Decode(&priceLevels)
+	if err != nil {
+		return nil, err
+	}
+
+	return priceLevels, nil
+
 }
