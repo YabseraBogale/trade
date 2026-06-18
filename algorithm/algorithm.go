@@ -53,8 +53,8 @@ type Order struct {
 }
 
 type PriceLevel struct {
-	Price  float64
-	Volume float64
+	Price  float64 `json:price`
+	Volume float64 `json:volume`
 }
 
 type OrderBook struct {
