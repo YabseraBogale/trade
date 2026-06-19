@@ -1,4 +1,4 @@
-package algorithm
+package algorithm_test
 
 import (
 	"fmt"
