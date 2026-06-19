@@ -8,7 +8,7 @@ import (
 
 func TestFetch(t *testing.T) {
 	url := "http://127.0.0.1:5000/"
-	res, err := algorithm.FetchAndParseFromURL(url)
+	res, err := algorithm.FetchVolumeAndClosePriceFromURL(url)
 	if err != nil {
 		t.Fatalf("Error: %v", err)
 	}

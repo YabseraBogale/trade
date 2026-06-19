@@ -59,6 +59,10 @@ type PriceLevel struct {
 	Volume float64 `json:"volume"`
 }
 
+type Symbole struct {
+	Name string `json:"name"`
+}
+
 type OrderBook struct {
 	Bids []PriceLevel
 	Asks []PriceLevel
@@ -142,7 +146,7 @@ func BidAskSpread(askPrice float64, bidPrice float64) float64 {
 	return askPrice - bidPrice
 }
 
-func FetchAndParseFromURL(apiURL string) ([]PriceLevel, error) {
+func FetchVolumeAndClosePriceFromURL(apiURL string) ([]PriceLevel, error) {
 	resp, err := http.Get(apiURL)
 	if err != nil {
 		return nil, err
@@ -155,5 +159,23 @@ func FetchAndParseFromURL(apiURL string) ([]PriceLevel, error) {
 	}
 
 	return priceLevels, nil
+
+}
+
+func FetchNameList(apiURL string) ([]Symbole, error) {
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	symbole := []Symbole{}
+
+	err = json.NewDecoder(resp.Body).Decode(&symbole)
+	if err != nil {
+		return nil, err
+	}
+
+	return symbole, nil
 
 }
