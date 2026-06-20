@@ -7,6 +7,16 @@ import (
 	"strings"
 )
 
+type Portfolio struct {
+	Cash           float64
+	PositionShares float64
+}
+
+type BackTest struct {
+	Portfolio Portfolio
+	Fees      TransactionCost
+}
+
 type TransactionCost struct {
 	Commissions               float64
 	NumberOfShares            int
