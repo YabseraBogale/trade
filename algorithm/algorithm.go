@@ -3,6 +3,7 @@ package algorithm
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -34,6 +35,59 @@ func NewBackTestEngine(initalCash float64, fee TransactionCost) *BackTest {
 		},
 		Fees: fee,
 	}
+}
+
+func (b *BackTest) Run(data []PriceLevel, targetShares float64, side string) (*Order, error) {
+	if len(data) == 0 {
+		return nil, fmt.Errorf("no historical data provided for backtest")
+	}
+	order := &Order{
+		Side:           strings.ToUpper(side),
+		SharesDesired:  targetShares,
+		SharesExecuted: 0,
+		PriceDecision:  data[0].Price,
+		PriceArrival:   data[0].Price,
+		PriceClose:     data[len(data)-1].Price,
+	}
+	vwapTracker := New()
+	var totalExecutionCost float64
+	fmt.Printf("Starting Backtest: %s %.2f shares. Initial Cash: $%.2f\n", order.Side, targetShares, b.Portfolio.Cash)
+	for i, tick := range data {
+		currentVwap := vwapTracker.Update(tick.Price, tick.Volume)
+		if order.SharesExecuted > order.SharesDesired {
+			participationRate := 0.10
+			sliceShare := tick.Volume * participationRate
+
+			if order.SharesExecuted+sliceShare > order.SharesDesired {
+				sliceShare = order.SharesDesired - order.SharesExecuted
+			}
+			if sliceShare > 0 {
+				if order.Side == "BUY" {
+					cost := sliceShare * tick.Price
+					if b.Portfolio.Cash >= cost {
+						b.Portfolio.Cash -= cost
+						b.Portfolio.PositionShares += sliceShare
+						order.SharesExecuted += sliceShare
+						totalExecutionCost += sliceShare * tick.Price
+					}
+				} else if order.Side == "SELL" {
+					if b.Portfolio.PositionShares >= sliceShare {
+						b.Portfolio.PositionShares -= sliceShare
+						b.Portfolio.Cash += sliceShare * tick.Price
+						order.SharesExecuted += sliceShare
+						totalExecutionCost += sliceShare * tick.Price
+
+					}
+				}
+				fmt.Printf("[Tick %d] Market Price: %.2f | Running VWAP: %.2f | Executed Slice: %.2f\n",
+					i, tick.Price, currentVwap, sliceShare)
+			}
+		}
+	}
+	if order.SharesExecuted > 0 {
+		order.PriceExecuted = totalExecutionCost / order.SharesExecuted
+	}
+	return order, nil
 }
 
 type Tick struct {
