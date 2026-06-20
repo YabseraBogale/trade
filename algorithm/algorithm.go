@@ -26,6 +26,16 @@ type TransactionCost struct {
 	Slippage                  float64
 }
 
+func NewBackTestEngine(initalCash float64, fee TransactionCost) *BackTest {
+	return &BackTest{
+		Portfolio: Portfolio{
+			Cash:           initalCash,
+			PositionShares: 0,
+		},
+		Fees: fee,
+	}
+}
+
 type Tick struct {
 	Volume float64
 	Price  float64
