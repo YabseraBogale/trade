@@ -8,6 +8,24 @@ import (
 )
 
 func TestBackTest(t *testing.T) {
+	url := ""
+	resName, err := algorithm.FetchNameList(url)
+	if err != nil {
+		t.Fatalf("Failed Error %v", err)
+	}
+	index := rand.Intn(len(resName))
+	tickerURL := "http://127.0.0.1:5000/" + resName[index].Name
+	histroicalData, err := algorithm.FetchVolumeAndClosePriceFromURL(tickerURL)
+	if err != nil {
+		t.Fatalf("Failed Error %v", err)
+	}
+	fee := algorithm.TransactionCost{
+		Commissions:               0.0,
+		ExchangeFee:               0.0,
+		TaxesFee:                  0.0,
+		ClearingAndSettlementFees: 0.0,
+	}
+	engine := algorithm.NewBackTestEngine(1000, fee)
 
 }
 
