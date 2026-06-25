@@ -26,7 +26,18 @@ func TestBackTest(t *testing.T) {
 		ClearingAndSettlementFees: 0.0,
 	}
 	engine := algorithm.NewBackTestEngine(1000, fee)
-
+	orderResults, err := engine.Run(histroicalData, 500.0, "BUY")
+	if err != nil {
+		t.Fatalf("Back Test error %v")
+	}
+	shortFall, err := orderResults.ImplementationShortfall(fee)
+	if err != nil {
+		t.Fatalf("Short fall error %v", err)
+	}
+	fmt.Println("Total Slippage & Fees (Implementation Shortfall):", shortFall)
+	fmt.Printf("\n--- BACKTEST RESULTS FOR %s ---\n", resName[index].Name)
+	fmt.Printf("Shares Desired:  %.2f | Shares Executed: %.2f\n", orderResults.SharesDesired, orderResults.SharesExecuted)
+	fmt.Printf("Decision Price:  $%.2f  | Avg Executed Price: $%.2f\n", orderResults.PriceDecision, orderResults.PriceExecuted)
 }
 
 func TestFetchVolumeAndClosePriceFromURL(t *testing.T) {
