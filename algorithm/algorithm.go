@@ -8,6 +8,12 @@ import (
 	"strings"
 )
 
+type Constituent struct {
+	Name              string
+	CurrentPrice      float64
+	SharesOutStanding float64
+}
+
 type Portfolio struct {
 	Cash           float64
 	PositionShares float64
@@ -25,6 +31,48 @@ type TransactionCost struct {
 	TaxesFee                  float64
 	ClearingAndSettlementFees float64
 	Slippage                  float64
+}
+
+func CalculateMarketCapIndex(currentAssts []Constituent, baseMarketCap float64, baseIndexValue float64) (float64, error) {
+	if baseMarketCap <= 0 {
+		return 0, fmt.Errorf("base market cap must be greater than zero")
+	}
+	var currentTotalMarketCap float64
+
+	for _, assets := range currentAssts {
+		currentTotalMarketCap += assets.CurrentPrice * assets.SharesOutStanding
+	}
+
+	indexValue := (currentTotalMarketCap / baseMarketCap) * baseIndexValue
+	return indexValue, nil
+
+}
+
+type InitalPrice struct {
+	Name      string
+	BasePrice float64
+}
+
+func CalculateEqualWeightIndex(currentAssets []Constituent, basePrices map[string]float64) (float64, error) {
+	if len(currentAssets) <= 0 {
+		return 0, fmt.Errorf("no asset provided")
+	}
+
+	var totalReturn float64
+	var countedAssets float64
+
+	for _, asset := range currentAssets {
+		basePrice, exists := basePrices[asset.Name]
+		if exists && basePrice > 0 {
+			totalReturn += asset.CurrentPrice / basePrice
+			countedAssets++
+		}
+	}
+	if countedAssets == 0 {
+		return 0, fmt.Errorf("no matching base price found")
+	}
+
+	return (totalReturn / countedAssets), nil
 }
 
 func NewBackTestEngine(initalCash float64, fee TransactionCost) *BackTest {
