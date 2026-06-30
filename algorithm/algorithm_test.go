@@ -14,7 +14,7 @@ func TestBackTest(t *testing.T) {
 		t.Fatalf("Failed Error at resName %v", err)
 	}
 	index := rand.Intn(len(resName))
-	tickerURL := "http://localhost:8080/" + resName[index].Name
+	tickerURL := "http://localhost:8080/" + resName[index]
 	histroicalData, err := algorithm.FetchVolumeAndClosePriceFromURL(tickerURL)
 	if err != nil {
 		t.Fatalf("Failed Error at histroicalData %v", err)
@@ -35,7 +35,7 @@ func TestBackTest(t *testing.T) {
 		t.Fatalf("Short fall error at shortFall %v", err)
 	}
 	fmt.Println("Total Slippage & Fees (Implementation Shortfall):", shortFall)
-	fmt.Printf("\n--- BACKTEST RESULTS FOR %s ---\n", resName[index].Name)
+	fmt.Printf("\n--- BACKTEST RESULTS FOR %s ---\n", resName[index])
 	fmt.Printf("Shares Desired:  %.2f | Shares Executed: %.2f\n", orderResults.SharesDesired, orderResults.SharesExecuted)
 	fmt.Printf("Decision Price:  $%.2f  | Avg Executed Price: $%.2f\n", orderResults.PriceDecision, orderResults.PriceExecuted)
 }
@@ -49,7 +49,7 @@ func TestFetchVolumeAndClosePriceFromURL(t *testing.T) {
 	}
 	fmt.Println("Successfully processed Symbole length of ", len(resName))
 	index := rand.Intn(len(resName))
-	url = "http://127.0.0.1:5000/" + resName[index].Name
+	url = "http://127.0.0.1:5000/" + resName[index]
 	resVolumeClosePrice, err := algorithm.FetchVolumeAndClosePriceFromURL(url)
 	if err != nil {
 		t.Fatalf("Failed Error at resVolumeClosePrice %v", err)
