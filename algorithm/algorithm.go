@@ -202,7 +202,8 @@ type PriceLevel struct {
 }
 
 type Symbole struct {
-	Name string `json:"name"`
+	Name              string  `json:"Name"`
+	SharesOutstanding float64 `json:"SharesOutstanding"`
 }
 
 type OrderBook struct {
