@@ -14,7 +14,7 @@ func TestBackTest(t *testing.T) {
 		t.Fatalf("Failed Error %v", err)
 	}
 	index := rand.Intn(len(resName))
-	tickerURL := "http://127.0.0.1:5000/" + resName[index].Name
+	tickerURL := "http://localhost:8080/" + resName[index].Name
 	histroicalData, err := algorithm.FetchVolumeAndClosePriceFromURL(tickerURL)
 	if err != nil {
 		t.Fatalf("Failed Error %v", err)
@@ -28,7 +28,7 @@ func TestBackTest(t *testing.T) {
 	engine := algorithm.NewBackTestEngine(1000, fee)
 	orderResults, err := engine.Run(histroicalData, 500.0, "BUY")
 	if err != nil {
-		t.Fatalf("Back Test error %v")
+		t.Fatalf("Back Test error %v", err)
 	}
 	shortFall, err := orderResults.ImplementationShortfall(fee)
 	if err != nil {
