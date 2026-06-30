@@ -33,26 +33,6 @@ type TransactionCost struct {
 	Slippage                  float64
 }
 
-type TickerConstituent struct {
-	Name             string  `json:"name"`
-	ShareOutStanding float64 `json:"shares_outstanding"`
-}
-
-func FetchConstituent(apiURL string) ([]TickerConstituent, error) {
-	resp, err := http.Get(apiURL)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	var constituent []TickerConstituent
-	err = json.NewDecoder(resp.Body).Decode(&constituent)
-	if err != nil {
-		return nil, err
-	}
-	return constituent, nil
-
-}
-
 func CalculateMarketCapIndex(currentAssts []Constituent, baseMarketCap float64, baseIndexValue float64) (float64, error) {
 	if baseMarketCap <= 0 {
 		return 0, fmt.Errorf("base market cap must be greater than zero")
@@ -305,20 +285,25 @@ func FetchVolumeAndClosePriceFromURL(apiURL string) ([]PriceLevel, error) {
 
 }
 
-func FetchNameList(apiURL string) ([]Symbole, error) {
+type Ticker struct {
+	Count  int      `json:"Count"`
+	Ticker []string `json:"Ticker"`
+}
+
+func FetchNameList(apiURL string) ([]string, error) {
 	resp, err := http.Get(apiURL)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	symbole := []Symbole{}
+	tick := Ticker{}
 
-	err = json.NewDecoder(resp.Body).Decode(&symbole)
+	err = json.NewDecoder(resp.Body).Decode(&tick)
 	if err != nil {
 		return nil, err
 	}
 
-	return symbole, nil
+	return tick.Ticker, nil
 
 }
