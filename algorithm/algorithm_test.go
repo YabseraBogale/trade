@@ -8,7 +8,7 @@ import (
 )
 
 func TestBackTest(t *testing.T) {
-	url := ""
+	url := "http://localhost:8080/name"
 	resName, err := algorithm.FetchNameList(url)
 	if err != nil {
 		t.Fatalf("Failed Error %v", err)
