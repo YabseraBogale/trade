@@ -42,7 +42,7 @@ func TestBackTest(t *testing.T) {
 
 func TestFetchVolumeAndClosePriceFromURL(t *testing.T) {
 
-	url := "http://127.0.0.1:5000/name"
+	url := "http://localhost:8080/name"
 	resName, err := algorithm.FetchNameList(url)
 	if err != nil {
 		t.Fatalf("Failed Error: %v", err)
