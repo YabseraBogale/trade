@@ -316,7 +316,7 @@ func FetchNameList(apiURL string) ([]Symbole, error) {
 
 	err = json.NewDecoder(resp.Body).Decode(&symbole)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("JSON decode failed: %w", err)
 	}
 
 	return symbole, nil
