@@ -11,13 +11,13 @@ func TestBackTest(t *testing.T) {
 	url := "http://localhost:8080/name"
 	resName, err := algorithm.FetchNameList(url)
 	if err != nil {
-		t.Fatalf("Failed Error %v", err)
+		t.Fatalf("Failed Error at resName %v", err)
 	}
 	index := rand.Intn(len(resName))
 	tickerURL := "http://localhost:8080/" + resName[index].Name
 	histroicalData, err := algorithm.FetchVolumeAndClosePriceFromURL(tickerURL)
 	if err != nil {
-		t.Fatalf("Failed Error %v", err)
+		t.Fatalf("Failed Error at histroicalData %v", err)
 	}
 	fee := algorithm.TransactionCost{
 		Commissions:               0.0,
@@ -28,11 +28,11 @@ func TestBackTest(t *testing.T) {
 	engine := algorithm.NewBackTestEngine(1000, fee)
 	orderResults, err := engine.Run(histroicalData, 500.0, "BUY")
 	if err != nil {
-		t.Fatalf("Back Test error %v", err)
+		t.Fatalf("Back Test error at orderResults %v", err)
 	}
 	shortFall, err := orderResults.ImplementationShortfall(fee)
 	if err != nil {
-		t.Fatalf("Short fall error %v", err)
+		t.Fatalf("Short fall error at shortFall %v", err)
 	}
 	fmt.Println("Total Slippage & Fees (Implementation Shortfall):", shortFall)
 	fmt.Printf("\n--- BACKTEST RESULTS FOR %s ---\n", resName[index].Name)
@@ -45,14 +45,14 @@ func TestFetchVolumeAndClosePriceFromURL(t *testing.T) {
 	url := "http://localhost:8080/name"
 	resName, err := algorithm.FetchNameList(url)
 	if err != nil {
-		t.Fatalf("Failed Error: %v", err)
+		t.Fatalf("Failed Error at resName %v", err)
 	}
 	fmt.Println("Successfully processed Symbole length of ", len(resName))
 	index := rand.Intn(len(resName))
 	url = "http://127.0.0.1:5000/" + resName[index].Name
 	resVolumeClosePrice, err := algorithm.FetchVolumeAndClosePriceFromURL(url)
 	if err != nil {
-		t.Fatalf("Error: %v", err)
+		t.Fatalf("Failed Error at resVolumeClosePrice %v", err)
 	}
 	fmt.Println("Successfully processed Volume and Closed Price ", len(resVolumeClosePrice))
 }
