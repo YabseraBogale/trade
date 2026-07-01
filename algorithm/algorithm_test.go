@@ -49,7 +49,7 @@ func TestFetchVolumeAndClosePriceFromURL(t *testing.T) {
 	}
 	fmt.Println("Successfully processed Symbole length of ", len(resName))
 	index := rand.Intn(len(resName))
-	url = "http://127.0.0.1:5000/" + resName[index]
+	url = "http://localhost:8080/" + resName[index]
 	resVolumeClosePrice, err := algorithm.FetchVolumeAndClosePriceFromURL(url)
 	if err != nil {
 		t.Fatalf("Failed Error at resVolumeClosePrice %v", err)
